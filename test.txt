@@ -1,0 +1,26 @@
+Run Server by command
+python server.py
+
+Implementation of Server:-
+ Basicallly i have created a socket which is  bind with localhost:8888.Initially Server is waiting for client connection.When server gets any connection request, it accept it & take the header of the client request. By parsing the header, server decide whether client request is PUT request or GET request. After deciding it takes accordingly action . If client request want to make some new connection with some connection-Id & timeout my server allocate them a new process for the given time.After completion of time, server respond them & process get terminated by server.
+ For tracking the current status of server i have created time_status dictionary which is share among all process,which is updated every second.I have also created socket_status & process_status dictionary which is useful when we want to kill any process or close any connection 
+
+ I have tested my server using curl.  
+
+Followig are my testing result :
+test 1. curl 'http://localhost:8888/api/request?connId=19&timeout=80'
+   Output:-After 80 second {"status":"OK"}
+
+test 2. curl 'http://localhost:8888/api/request?connId=9&timeout=70'
+   Output:-After 70 second {"status":"OK"}
+
+test 3. curl http://localhost:8888/api/serverStatus
+   Output:-{'19':'30','9':'41',}
+
+test 4. curl -H 'Content-Type: application/json' -X PUT -d '{"connId":9}' http://localhost:8888/api/kill
+   Output:-{invaild connection Id :9}
+
+test 5. curl -H 'Content-Type: application/json' -X PUT -d '{"connId":19}' http://
+   localhost:8888/api/kill
+   Output:-{"status":"kill"}  
+
